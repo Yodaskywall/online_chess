@@ -35,16 +35,17 @@ def threaded_client(conn):
                 print("Received ", reply)
                 print("Sending: ", reply)
 
+
             conn.sendall(str.encode(reply))
 
         except:
-            break
+            pass
 
-        print("Lost connection")
-        conn.close()
+    print("Lost connection")
+    conn.close()
 
 while True:
     conn, addr = s.accept()
     print(f"Connected to {addr}")
 
-    start_new_thread(threaded_client, (conn))
+    start_new_thread(threaded_client, (conn,))
