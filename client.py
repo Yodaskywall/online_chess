@@ -40,7 +40,7 @@ class Player:
         self.rect = (self.x, self.y, self.width, self.height)
 
         if self.x < 0 or self.x + self.width > 500 or self.y < 0 or self.y + self.height > 500:
-            print("Youu crashed you noob")
+            print("You crashed you noob")
             pygame.quit()
             quit()
 
