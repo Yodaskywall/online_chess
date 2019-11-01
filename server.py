@@ -3,7 +3,7 @@ from _thread import *
 import sys
 
 server = "192.168.1.108"
-port = 5555
+port = 25565
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -11,7 +11,7 @@ try:
     s.bind((server, port))
 
 except socket.error as e:
-    str(e)
+    print(e)
 
 s.listen(2)
 print("Waiting for a connection, Server Started")
