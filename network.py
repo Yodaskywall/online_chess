@@ -1,5 +1,6 @@
 import socket
 import pickle
+HEADERSIZE = 10
 
 class Network:
     def __init__(self):
@@ -15,13 +16,34 @@ class Network:
     def connect(self):
         try:
             self.client.connect(self.addr)
-            return pickle.loads(self.client.recv(2048))
+            return self.client.recv(2096).decode()
         except:
             pass
 
     def send(self, data):
         try:
-            self.client.send(pickle.dumps(data))
-            return pickle.loads(self.client.recv(2048))
+            self.client.send(str.encode(data))
+            return self.pickle_receive()
         except socket.error as e:
             print(e)
+
+    def pickle_send(self, object):
+        msg = pickle.dumps(object)
+        msg = bytes(f"{len(msg):<{HEADERSIZE}}", "utf-8") + msg
+        self.client.send(msg)
+
+    def pickle_receive(self):
+        full_msg = b''
+        new_msg = True
+        while True:
+            msg = self.client.recv(16)
+
+            if new_msg:
+                msglen = int(msg[:HEADERSIZE])
+                new_msg = False
+
+            full_msg += msg
+
+            if len(full_msg) - HEADERSIZE == msglen:
+                object = pickle.loads(full_msg[HEADERSIZE:])
+                return object
